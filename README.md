@@ -60,14 +60,14 @@ The data configuration is stored in the following three files:
 8. (Optional) Time slot for sending the flow  
 
 **Example**:
-1 803 32000000 32000000 1 4 0 2 2 556 4000000 4000000 1 5 0 3
+1 803 32000000 32000000 1 4 0 2
 
 
 #### 3. `3flowlink.txt`
 
 - Each line records the route of a traffic flow, represented as a set of directed edges, with the sending terminal listed first.  
 **Example**:
-231 3 3 2 2 1 1 202 228 3 3 2 2 6 6 9 9 215
+231 3 3 2 2 1 1 202
 
 ### Output
 
