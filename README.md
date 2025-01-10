@@ -33,7 +33,7 @@ The data configuration is stored in the following three files:
 6. `isterminal` (whether the device is a switch or a terminal)  
 
 **Example**:
-0 15000 0 800 15800 1 1 15000 0 800 15800 1
+0 15000 0 800 15800 1
 
 
 - **From the blank line to the end**: Records data link information in four parts:
