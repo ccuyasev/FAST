@@ -1,60 +1,105 @@
 # FAST
 
-本项目内包含两个文件夹，表示使用本项目提出的快速调度算法（FAST）调度业务流，上进行实验，
+This project contains two folders for conducting experiments using the proposed FastScheduler (FAST) algorithm to schedule traffic flows.
 
-数据设置：
-1.输入：
-数据设置分别在"1flowlink.txt"，"2device.txt"，"3flow.txt"数据文档中进行，下面对每一个文档进行描述：
+## Data Configuration
 
-(1).在"1device.txt"中，第一行记录了网络参数信息，一共有八个部分，分别记录时间粒度（timeScope）、时间同步精度(timeAccuracy)、
-时间槽(timeSlot)、最大报文长度(maxFrame)、最大线长(maxLine)、网络线速(lineRate)、设备数量(devnumber)和链路数量(linknumber)
-例：
+### Input
+
+The data configuration is stored in the following three files:
+
+#### 1. `1device.txt`
+
+- **First line**: Records network parameter information in eight parts:
+  1. Time granularity (`timeScope`)  
+  2. Time synchronization accuracy (`timeAccuracy`)  
+  3. Time slot (`timeSlot`)  
+  4. Maximum frame length (`maxFrame`)  
+  5. Maximum line length (`maxLine`)  
+  6. Network line rate (`lineRate`)  
+  7. Number of devices (`devnumber`)  
+  8. Number of links (`linknumber`)  
+
+  **Example**:
 1 1000 20000 1518 100 1000 44 94
-从第二行到下一次换行为止，记录了交换机的参数信息，一共有六个部分，分别记录交换机的设备编号(devid)、接收时延(rdelay)、
-转发时延(fdelay)、处理时延(pdelay)、存储转发时延(sfdelay)以及 isterminal，表示该设备是交换机还是终端
-例：
-0 15000 0 800 15800 1
-1 15000 0 800 15800 1
-2 15000 0 800 15800 1
-3 15000 0 800 15800 1
-4 15000 0 800 15800 1
-从换行到结束，记录了数据链路信息，一共有四个部分，分别记录数据链路的编号(linkid)、前序节点的编号(predev)、后续节点的编号(postdev)
-以及链路时延(ldelay)
-例：
-1 3 230 40 
-2 230 3 40 
-3 3 229 40 
-4 229 3 40 
-5 7 6  40 
 
-(2).在"2flow.txt"中，第一行记录了本次调度所调度的业务流个数
-从第二行开始，记录了每条业务流的信息，一共有七【八】个部分，分别记录了业务流的编号(fid)、报文的长度(length)、业务流周期(period)、
-端到端时延(etedelay)、接收终端的数量(rdevnumber)、路由中链路的数量(linknumber)和路中中被调度的链路数量(schedlinknumber)
-【以及规定业务流在哪个时间槽发送】
-例:
-1 803 32000000 32000000 1 4 0 【2】
-2 556 4000000 4000000 1 5 0 【3】
-3 487 32000000 32000000 1 4 0 【4】
 
-(3).在"3flowlink.txt"中，每一行记录了业务流从发送终端到接收终端的路由，该路由由有向边的集合组成，
-且排在最前面的是发送终端，比如route={[v1,v2],[v2,v3],[v3,v4]},这说明v1是发送终端，v4无后继节点是接收终端。
-例：
-231 3 3 2 2 1 1 202 
-228 3 3 2 2 6 6 9 9 215 
-216 10 10 5 5 3 3 230 
-217 10 10 216 
+- **Second line to the next blank line**: Records switch parameters in six parts:
+1. Device ID (`devid`)  
+2. Receiving delay (`rdelay`)  
+3. Forwarding delay (`fdelay`)  
+4. Processing delay (`pdelay`)  
+5. Store-and-forward delay (`sfdelay`)  
+6. `isterminal` (whether the device is a switch or a terminal)  
 
-2.输出：
-FAST调度算法共有六个输出文档，下面对每一个文档进行描述：
-(1)"breakloop.txt"中保存了调度算法在每一次破环时入栈的业务流编号(fid)和数据链路结点
-(2)."urgency.txt"中保存了无法调度的业务流编号(fid)和无法调度的数据链路结点
-(3)."print.txt"中保存了每条业务流每个数据链路结点的状态信息
-(4)."offsetresult.txt"中保存了每一条数据流在每一个设备上的offset，offset乘以时间槽（20000ns）即为最终调度结果，
-     若offset为2147483647，表明该业务流无法调度
-(5)."linkresult.txt"中保存了每一个数据链路结点上通过的业务流的offset
-(6)."stack.txt"中保存了调度时需要破环的业务流条数、调度时间和无法调度的业务流个数
+**Example**:
+0 15000 0 800 15800 1 1 15000 0 800 15800 1
 
-运行：
-可在"2flow.txt"第一行中修改本次调度所调度的业务流个数，并将调度结果输出在六个文档中。
 
-感谢阅读！
+- **From the blank line to the end**: Records data link information in four parts:
+1. Link ID (`linkid`)  
+2. Preceding node ID (`predev`)  
+3. Succeeding node ID (`postdev`)  
+4. Link delay (`ldelay`)  
+
+**Example**:
+1 3 230 40 2 230 3 40
+
+
+#### 2. `2flow.txt`
+
+- **First line**: Records the number of traffic flows to be scheduled.  
+- **From the second line**: Records information for each traffic flow in seven or eight parts:
+1. Flow ID (`fid`)  
+2. Frame length (`length`)  
+3. Flow period (`period`)  
+4. End-to-end delay (`etedelay`)  
+5. Number of receiving terminals (`rdevnumber`)  
+6. Number of links in the route (`linknumber`)  
+7. Number of schedulable links in the route (`schedlinknumber`)  
+8. (Optional) Time slot for sending the flow  
+
+**Example**:
+1 803 32000000 32000000 1 4 0 2 2 556 4000000 4000000 1 5 0 3
+
+
+#### 3. `3flowlink.txt`
+
+- Each line records the route of a traffic flow, represented as a set of directed edges, with the sending terminal listed first.  
+**Example**:
+231 3 3 2 2 1 1 202 228 3 3 2 2 6 6 9 9 215
+
+### Output
+
+The FAST algorithm generates results in six files:
+
+1. **`breakloop.txt`**  
+ - Stores the flow ID (`fid`) and data link node information for each flow pushed into the stack during loop breaking.
+
+2. **`urgency.txt`**  
+ - Stores the IDs of unschedulable flows (`fid`) and the corresponding data link nodes.
+
+3. **`print.txt`**  
+ - Stores the state information of each traffic flow at every data link node.
+
+4. **`offsetresult.txt`**  
+ - Stores the `offset` for each flow at every device.  
+   - The final schedule is calculated by multiplying `offset` by the time slot (20000ns).  
+   - If `offset` is `2147483647`, the flow is unschedulable.
+
+5. **`linkresult.txt`**  
+ - Stores the `offset` of flows passing through each data link node.
+
+6. **`stack.txt`**  
+ - Records the number of broken loops, scheduling time, and the count of unschedulable flows.
+
+## Execution
+
+- Modify the number of flows to be scheduled in the first line of `2flow.txt`.  
+- The scheduling results will be output to the six files listed above.
+
+Thank you for reading!
+
+
+
+
