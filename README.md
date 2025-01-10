@@ -1,6 +1,6 @@
 # FAST
+This project includes the implementation of the FAST algorithm and test cases for 10,000 TT flows based on the CEV topology.
 
-This project contains two folders for conducting experiments using the proposed FastScheduler (FAST) algorithm to schedule traffic flows.
 
 ## Data Configuration
 
